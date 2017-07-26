@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        .ul {
+            list-style: none;
+            display: inline-block
+        }
+
+        li {
+            margin-right: 10px
+        }
+
+        .flip-list-move {
+            transition: transform .5s
+        }
+
+        .flip-list-item {
+            transition: all 1s;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .flip-list-enter, .flip-list-leave-to {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .flip-list-leave-active {
+            position: absolute
+        }
+        .container{
+            display: flex;
+            flex-wrap: wrap;
+            width: 238px;
+            margin-top: 10px;
+        }
+        .cell{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 25px;
+            height: 25px;
+            border: 1px solid #aaa;
+            margin-right: -1px;
+            margin-bottom: -1px;
+        }
+        .jump-move{
+            transition: transform .5s;
+        }
+    </style>
+</head>
+<body>
+<div id="staggered-list-demo">
+    <button v-on:click="shuffle">shuffle</button>
+    <br>
+    <input v-model="query" placeholder="vue">
+    <p>{{query}}</p>
+    <transition-group
+            name="staggered-fade"
+            tag="ul"
+            v-bind:css="false"
+            v-on:before-enter="beforeEnter"
+            v-on:enter="enter"
+            v-on:leave="leave"
+    >
+        <li
+                v-for="(item, index) in computedList"
+                v-bind:key="item.msg"
+                v-bind:data-index="index"
+        >{{ item.msg }}</li>
+    </transition-group>
+    <transition-group class="container" name="jump">
+        <div v-for="cell in cells" v-bind:key="cell.id" class="cell">{{cell.number}}</div>
+    </transition-group>
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+<script>
+    new Vue({
+        el: '#staggered-list-demo',
+        data: {
+            query: '',
+            list: [
+                { msg: 'Bruce Lee' },
+                { msg: 'Jackie Chan' },
+                { msg: 'Chuck Norris' },
+                { msg: 'Jet Li' },
+                { msg: 'Kung Fury' }
+            ],
+            <!--生成81位1-9的数字-->
+            cells:Array.apply(null,{length:81}).map(function(_,index){
+                return {
+                    id:index,
+                    number:index%9+1
+                }
+            })
+        },
+        computed: {
+            computedList: function () {
+                var vm = this
+                return this.list.filter(function (item) {
+                    return item.msg.toLowerCase().indexOf(vm.query.toLowerCase()) !== -1
+                })
+            }
+        },
+        methods: {
+            shuffle:function(){
+                return this.cells=_.shuffle(this.cells)
+            },
+            beforeEnter: function (el) {
+                el.style.opacity = 0
+                el.style.height = 0
+            },
+            enter: function (el, done) {
+                var delay = el.dataset.index * 150
+                setTimeout(function () {
+                    Velocity(
+                        el,
+                        { opacity: 1, height: '1.6em' },
+                        { complete: done }
+                    )
+                }, delay)
+            },
+            leave: function (el, done) {
+                var delay = el.dataset.index * 150
+                setTimeout(function () {
+                    Velocity(
+                        el,
+                        { opacity: 0, height: 0 },
+                        { complete: done }
+                    )
+                }, delay)
+            }
+        }
+    })
+</script>
+</html>
