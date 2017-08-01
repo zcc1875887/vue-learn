@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+		*{
+			margin: 0;
+			padding:0
+		}
+		.foo{
+			list-style: none;
+		}
+		#app{
+			margin-left: 20px;
+		}
+	</style>
+</head>
+<body>
+<div id="app">
+	<my-component></my-component>
+	<ul v-if="items.length" class="foo">
+		<li v-for="item in items">{{item.name}}</li>
+	</ul>
+	<p v-else>no message</p>
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+	Vue.component("my-component",{
+		render:function(createElement){
+			return createElement("div",
+				Array.apply(null,{length:5}).map(function(){
+					return createElement("p","hello tf")
+				})
+			)
+		}
+	})
+	new Vue({
+		el:"#app",
+		data:{
+			items:[
+				{name:"zcc"},
+				{name:"ydd"},
+				{name:"zwy"},
+			]
+		}
+	})
+</script>
+</html>
