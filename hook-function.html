@@ -5,7 +5,7 @@
 	<title>Title</title>
 </head>
 <body>
-<div id="app" v-demo11:foo.a.b="message">
+<div id="app" v-demo11:foo.a.b="color">
 </div>
 </body>
 <script src="https://unpkg.com/vue"></script>
@@ -20,12 +20,13 @@
 				"argument:"+s(binding.arg)+"<br>"+
 				"modifiers:"+s(binding.modifiers)+"<br>"+
 				"vnode keys:"+Object.keys(vnode).join(',')
+			el.style.backgroundColor=binding.value
 		}
 	})
 	new Vue({
 		el: "#app",
 		data: {
-			message: "hello22"
+			color: "#8cb26b"
 		}
 	})
 </script>
