@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<div id="app">
+	<blog-post>
+		<h1 slot="header">this is header</h1>
+		<p>this is body</p>
+		<p slot="footer">this is footer</p>
+		<p>ye ye ye</p>
+	</blog-post>
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script>
+	Vue.component('blog-post',{
+		render:function(createElement){
+			var header=this.$slots.header
+			var body=this.$slots.default
+			var footer=this.$slots.footer
+			return createElement('',[
+				createElement('header',header),
+				createElement('body',body),
+				createElement('footer',footer)
+			])
+		}
+	})
+</script>
+</html>
